@@ -22,6 +22,6 @@ app.get('/users/list', users.list(db));
 app.post('/users/add', users.add(db));
 app.delete('/users/delete/:id', users.delete(db));
 
-app.listen(3000, function(){
+app.listen(process.env.PORT || 3000, function(){
   console.log('Express server listening on port 3000');
 });
