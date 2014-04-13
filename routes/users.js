@@ -38,7 +38,8 @@ exports.delete = function(db) {
 
   return function(req, res) {
 
-    userid = "ObjectId("+req.params.id+")";
+	var mongodb = require('mongodb');
+    userid = new mongodb.ObjectID(req.params.id);
     user = {_id: userid};
     console.log(user);
     db.users.remove(user, function(err, removed) {
