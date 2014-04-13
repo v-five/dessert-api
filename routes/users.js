@@ -40,7 +40,7 @@ exports.delete = function(db) {
 
     // userid = req.params.id;
     userid = "534a8c5690b5414f55baead1";
-    user = {"_id", ObjectId(userid)};
+    user = "{'_id', ObjectId("+userid+")}";
 
     db.users.remove(user, function(err, removed) {
       if(err) res.send(err);
@@ -58,8 +58,8 @@ exports.delete = function(db) {
 exports.update = function(db) {
 
   userid = "534a8c051fa6211555b67628";
-  user = {"_id", ObjectId(userid)};
-  patch = {$set: {password: "testPass"}};
+  user = "{'_id', ObjectId("+userid+")}";
+  patch = "{$set: {password: 'testPass'}}";
   return function(req, res) {
     db.users.remove(user, patch, function(err, updated) {
       if(err) res.send(err);
