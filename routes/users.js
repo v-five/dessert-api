@@ -38,8 +38,8 @@ exports.delete = function(db) {
 
   return function(req, res) {
 
-    // userid = req.params.id;
-    userid = "534a8c5690b5414f55baead1";
+    userid = req.params.id;
+    //userid = "534a8c5690b5414f55baead1";
     user = "{'_id', ObjectId("+userid+")}";
 
     db.users.remove(user, function(err, removed) {
