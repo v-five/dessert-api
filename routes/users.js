@@ -39,7 +39,7 @@ exports.delete = function(db) {
   return function(req, res) {
 
     userid = req.params.id;
-    user = {_id: userid};
+    user = {_id: ObjectId(userid)};
     db.users.remove(user, function(err, removed) {
       if(err) res.send(err);
       else if(!removed) res.send(false);
