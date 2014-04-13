@@ -5,8 +5,8 @@
 var express = require('express');
 var users = require('./routes/users');
 
-//var databaseUrl = "dessert:pVj7tZnB@ds039467.mongolab.com:39467/dessert"
-var databaseUrl = "localhost:27017/dessert"
+var databaseUrl = "dessert:pVj7tZnB@ds039467.mongolab.com:39467/dessert"
+//var databaseUrl = "localhost:27017/dessert"
 var collections = ["users", "reports"]
 var db = require("mongojs").connect(databaseUrl, collections);
 

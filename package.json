@@ -1,5 +1,5 @@
 {
-  "name": "dessert",
+  "name": "dessert_api",
   "version": "0.0.1",
   "description": "Just 4 fun",
   "main": "main.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:v-five/dessert.git"
+    "url": "git@github.com:v-five/dessert_api.git"
   },
   "keywords": [
     "dessert",
