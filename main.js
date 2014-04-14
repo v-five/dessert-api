@@ -4,6 +4,7 @@
 
 var express = require('express');
 var users = require('./routes/users');
+var bodyParser = require('body-parser');
 
 var databaseUrl = "dessert:pVj7tZnB@ds039467.mongolab.com:39467/dessert"
 //var databaseUrl = "localhost:27017/dessert"
@@ -13,6 +14,7 @@ var db = require("mongojs").connect(databaseUrl, collections);
 
 var app = express();
 
+app.use(bodyParser());
 
 app.get('/', function(req, res){
   res.send('hello world');
