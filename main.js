@@ -20,7 +20,7 @@ app.get('/', function(req, res){
 
 app.get('/users/list', users.list(db));
 app.post('/users/add', users.add(db));
-app.update('/users/update/:id', users.update(db));
+app.update('/users/update/:id', users.patch(db));
 app.delete('/users/delete/:id', users.delete(db));
 
 app.listen(process.env.PORT || 3000, function(){

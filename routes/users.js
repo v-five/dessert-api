@@ -51,7 +51,7 @@ exports.delete = function(db) {
  * PATCH user
  */
 
-exports.update = function(db) {
+exports.patch = function(db) {
 	return function(req, res) {
 		var mongodb = require('mongodb');
 		var userid = new mongodb.ObjectID(req.params.id);
