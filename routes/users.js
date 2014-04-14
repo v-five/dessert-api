@@ -19,6 +19,13 @@ exports.list = function(db) {
 
 exports.add = function(db) {
 	return function(req, res) {
+		console.log(" ");
+		console.log(" ");
+		console.log(" ");
+		console.log(req);
+		console.log(" ");
+		console.log(" ");
+		console.log(" ");
 		var user = {username: req.body.username, email: req.body.email, password: req.body.password, friends: [], content: []};
 		db.users.save(user, function(err, saved) {
 			if(err) res.send(err);
