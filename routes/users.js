@@ -22,7 +22,7 @@ exports.add = function(db) {
 		console.log(" ");
 		console.log(" ");
 		console.log(" ");
-		console.log(req);
+		console.log(req.body);
 		console.log(" ");
 		console.log(" ");
 		console.log(" ");
