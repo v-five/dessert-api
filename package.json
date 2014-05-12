@@ -2,7 +2,7 @@
   "name": "dessert-api",
   "version": "0.0.2",
   "description": "Just 4 fun",
-  "main": "main.js",
+  "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

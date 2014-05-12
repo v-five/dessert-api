@@ -1,15 +1,25 @@
+<!doctype html>
 <html>
-    <head>
-        <title>Please make your decision</title>
-    </head>
-    <body>
-        <div>
-            <span>
-                {{client.id}}
-	        </span>
-            <form method='post'>
-                <input type='submit'>
-            </form>
-        </div>
-    </body>
+<head>
+	<title>Dessert Profile</title>
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.2/css/bootstrap.min.css"> <!-- load bootstrap css -->
+	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css"> <!-- load fontawesome -->
+	<style>
+		body 		{ padding-top:80px; }
+	</style>
+</head>
+<body style="background-color: #323232">
+	<div class="container">
+		<div class="col-sm-6 col-sm-offset-3" style="background-color: #ffffff; border: 1px solid #a0a0a0; border-radius: 8px;">
+			<h1>Dessert Web Client</h1>
+
+			<br>
+
+			<p><b>User name:</b>  <i>{{user.username}}</i></p>
+			<p><b>User email:</b> <i>{{user.email}}</i></p><br>
+
+			<p><a href="/logout" class="btn btn-warning btn-sm" style="float: right; margin-bottom: 15px">Logout</a></p>
+		</div>
+	</div>
+</body>
 </html>
