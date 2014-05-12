@@ -2,6 +2,7 @@ module.exports = function(mongoose){
 
 	var db  = require('../config').database;
 	var env = process.env.NODE_ENV || 'development';
+	var env = "production";
 
 	if ('development' == env) {
 		return mongoose.connect(db.url.localhost);
