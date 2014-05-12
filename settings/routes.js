@@ -15,7 +15,7 @@ module.exports = function(app, passport, oauth2) {
 	});
 
 	app.get('/profile', isLoggedIn, function(req, res){
-		res.render("profile");
+		res.render("profile", {user: req.user});
 	});
 
 
