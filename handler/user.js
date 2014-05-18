@@ -149,6 +149,9 @@ exports.bearerLogin = function(accessCode, done) {
 
 	Token.findOne({type: "access", token: accessCode}, function(err, accessToken) {
 
+		console.log(err);
+		console.log(accessToken);
+
 		if (err)
 			return done(err);
 
