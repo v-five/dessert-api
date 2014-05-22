@@ -1,8 +1,10 @@
 
 module.exports = {
 
-	user :      require('./user'),
+	user  :      require('./user'),
 
-	token :      require('./token')
+	token :      require('./token'),
+
+	file  :      require('./file')
 
 };
