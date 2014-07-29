@@ -11,12 +11,9 @@ var File = new Schema({
 	type         : String,
 	name         : String,
 	route        : String,
-	content      : [{
-		_id         : Schema.Types.ObjectId,
-		name        : String,
-		fileType    : String
-	}],
-	shared      : [{
+	content      : [File],
+	parent       : [File],
+	shared       : [{
 		user        : Schema.Types.ObjectId,
 		username    : String
 	}]

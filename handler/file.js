@@ -55,9 +55,6 @@ exports.get = function(owner, route, done) {
 
 exports.create = function(file, done) {
 
-//	{ owner: 'test', name: 'newFileName', parent: '/', fileType: 'dir' }
-
-
 	File.findOne({"owner.username": file.owner, route: file.parent}, function(err, parent) {
 
 		if (err)
@@ -79,7 +76,7 @@ exports.create = function(file, done) {
 			newFile.owner.username  = user.username;
 			newFile.owner._id       = user._id;
 			newFile.fileType        = file.fileType;
-			newFile.route           = file.parent+"/"+file.name;
+			newFile.route           = file.parent + (file.parent.slice(-1)=='/'?'':"/") + file.name;
 			newFile.parent          = file.parent;
 			newFile.name            = file.name;
 			newFile.content         = [];
@@ -89,11 +86,7 @@ exports.create = function(file, done) {
 				if (err)
 					return done(err);
 
-				parent.content.push({
-					_id      : newFile._id,
-					name     : newFile.name,
-					fileType : newFile.fileType
-				});
+				parent.content.push(newFile);
 
 				parent.save(function(err){
 
