@@ -12,7 +12,7 @@ var File = new Schema({
 	name         : String,
 	route        : String,
 	content      : [File],
-	parent       : [File],
+	parent       : Schema.Types.ObjectId,
 	shared       : [{
 		user        : Schema.Types.ObjectId,
 		username    : String

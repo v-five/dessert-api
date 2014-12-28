@@ -53,4 +53,15 @@ module.exports = function(app, passport) {
 				});
 			});
 
-}
+	app.delete('/api/files/delete/:id', passport.authenticate('bearer', { session: false }),
+		function(req, res){
+			handler.file.delete(req.params.id, function(err, result){
+
+				if(err)
+					return res.send(err);
+
+				res.json(result);
+			});
+		});
+
+};
