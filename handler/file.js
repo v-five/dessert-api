@@ -12,91 +12,127 @@ exports.findById = function(id, done){
 
 exports.get = function(owner, route, done) {
 
-	File.findOne({"owner.username": owner, route: route}, function(err, file) {
+	User.findOne({username: owner}, function(err, user) {
 
 		if (err)
 			return done(err);
 
-		if (!file && route == '/')
-			return User.findOne({username: owner}, function(err, user) {
+		if (!user)
+			return done(null, false);
 
-				if(err)
-					return done(err);
+		File.findOne({"owner": user._id, route: route}).populate('content').populate('owner', "username").exec(function (err, file) {
 
-				if(!user)
-					return done(null, false);
+			if (err)
+				return done(err);
 
-				var newFile     = new File();
+			if (!file && route == '/') {
 
-				newFile.owner.username  = user.username;
-				newFile.owner._id       = user._id;
-				newFile.fileType        = 'root';
-				newFile.route           = '/';
-				newFile.parent          = null;
-				newFile.name            = '';
-				newFile.content         = [];
-				newFile.shared          = [];
+				var newFile = new File();
 
-				newFile.save(function (err) {
+				newFile.owner = user._id;
+				newFile.type = 'dir';
+				newFile.route = '/';
+				newFile.parent = null;
+				newFile.name = '';
+				newFile.content = [];
+				newFile.shared = [];
+
+				return newFile.save(function (err) {
 					if (err)
 						return done(err);
 
 					return done(null, newFile);
 				});
+			}
 
+			if (!file)
+				return done(null, false);
+
+			User.populate(file.content, {path: 'owner', select: "username"}, function(err, content){
+
+				if(err)
+					done(err);
+
+				if(!content)
+					done(null, false);
+
+				file.content = content;
+				done(null, file);
 			});
-
-		if (!file)
-			return done(null, false);
-
-		done(null, file);
+		});
 	});
 };
 
 exports.create = function(file, done) {
 
-	File.findOne({"owner.username": file.owner, route: file.parent}, function(err, parent) {
+	User.findOne({username: file.owner}, function(err, user) {
 
-		if (err)
+		if(err)
 			return done(err);
 
-		if (!parent)
+		if(!user)
 			return done(null, false);
 
-		User.findOne({username: file.owner}, function(err, user) {
+		File.findOne({"owner": user._id, route: file.parent}, function(err, parent) {
 
-			if(err)
+			if (err)
 				return done(err);
 
-			if(!user)
+			if (!parent)
 				return done(null, false);
 
 			var newFile     = new File();
 
-			newFile.owner.username  = user.username;
-			newFile.owner._id       = user._id;
-			newFile.fileType        = file.fileType;
+			newFile.owner           = user._id;
+			newFile.type            = file.type;
+			newFile.binary          = file.binary;
 			newFile.route           = file.parent + (file.parent.slice(-1)=='/'?'':"/") + file.name;
 			newFile.parent          = parent._id;
 			newFile.name            = file.name;
 			newFile.content         = [];
 			newFile.shared          = [];
 
-			newFile.save(function (err) {
+			newFile.save(function (err, f) {
 				if (err) {
 					return done(err);
 				}
 
-				parent.content.push(newFile);
+				parent.content.push(f._id);
 
 				parent.save(function(err){
 
 					if (err)
 						return done(err);
 
-					done(null, parent);
+					done(null, true);
 				});
 			});
+		});
+	});
+};
+
+
+exports.update = function(id, updates, done) {
+
+	File.findById(id, function(err, file) {
+
+		if (err)
+			return done(err);
+
+		if (!file)
+			return done(null, false);
+
+
+		for(var prop in updates){
+			if(file.hasOwnProperty(prop)) file[prop] = updates[prop];
+		}
+
+		file.save(function (err) {
+			if (err) {
+				return done(err);
+			}
+
+			done(null, parent);
 		});
 	});
 };
@@ -122,59 +158,27 @@ var deleteRecursive = function(id, done){
 		if(!file)
 			return done(false);
 
-		var l = file.content.length;
 		var error = null;
 		var res = true;
-		for(var i = 0; i < l; i++){
+		for(var i in file.content){
+			if(i < file.content.length) {
+				deleteRecursive(file.content[i], function (e, r) {
+					error = e;
+					res = r;
+				});
 
-			deleteRecursive(file.content[i]._id, function(e, r){
-				error = e;
-				res = r;
-			});
-
-			if(error)
-				return done(error);
-			if(!res)
-				return done(null, false);
+				if (error)
+					return done(error);
+				if (!res)
+					return done(null, false);
+			}
 		}
 
-
-
-		File.findById(file.parent, function(err, parent) {
+		file.remove(function(err){
 			if (err)
 				return done(err);
 
-			if (!parent)
-				return done(null, false);
-
-			file.remove(function(err){
-				if (err)
-					return done(err);
-
-				parent.content = removeByAttr(parent.content, "_id", id);
-
-				parent.save(function(err) {
-
-					if (err)
-						return done(err);
-
-					done(null, true);
-				});
-			});
+			done(null, true);
 		});
 	});
-};
-
-var removeByAttr = function(arr, attr, value){
-	var i = arr.length;
-	while(i--){
-		if( arr[i]
-			&& arr[i].hasOwnProperty(attr)
-			&& (arguments.length > 2 && arr[i][attr] == value ) ){
-
-			arr.splice(i,1);
-
-		}
-	}
-	return arr;
 };

@@ -39,7 +39,7 @@ module.exports = function(app, passport) {
 				});
 			});
 
-	app.post('/api/files/create', passport.authenticate('bearer', { session: false }),
+	app.put('/api/files/create', passport.authenticate('bearer', { session: false }),
 			function(req, res) {
 				handler.file.create(req.body, function(err, file, info){
 
@@ -52,6 +52,17 @@ module.exports = function(app, passport) {
 					res.json(file);
 				});
 			});
+
+	app.post('/api/files/update/:id', passport.authenticate('bearer', { session: false }),
+		function(req, res){
+			handler.file.update(req.params.id, req.body, function(err, result){
+
+				if(err)
+					return res.send(err);
+
+				res.json(result);
+			});
+		});
 
 	app.delete('/api/files/delete/:id', passport.authenticate('bearer', { session: false }),
 		function(req, res){
