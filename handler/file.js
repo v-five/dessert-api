@@ -26,29 +26,13 @@ exports.get = function(owner, route, done) {
 				return done(err);
 
 			if (!file && route == '/') {
-
-				var newFile = new File();
-
-				newFile.owner = user._id;
-				newFile.type = 'dir';
-				newFile.route = '/';
-				newFile.parent = null;
-				newFile.name = '';
-				newFile.content = [];
-				newFile.shared = [];
-
-				return newFile.save(function (err) {
-					if (err)
-						return done(err);
-
-					return done(null, newFile);
-				});
+				createRoot(user._id, done);
 			}
 
 			if (!file)
 				return done(null, false);
 
-			User.populate(file.content, {path: 'owner', select: "username"}, function(err, content){
+			User.populate(file, {path: 'content.owner', select: "username"}, function(err, content){
 
 				if(err)
 					done(err);
@@ -56,10 +40,28 @@ exports.get = function(owner, route, done) {
 				if(!content)
 					done(null, false);
 
-				file.content = content;
 				done(null, file);
 			});
 		});
+	});
+};
+
+var createRoot = function(userId, done){
+	var newFile = new File();
+
+	newFile.owner = userId;
+	newFile.type = 'dir';
+	newFile.route = '/';
+	newFile.parent = null;
+	newFile.name = '';
+	newFile.content = [];
+	newFile.shared = [];
+
+	return newFile.save(function (err) {
+		if (err)
+			return done(err);
+
+		return done(null, newFile);
 	});
 };
 
@@ -82,6 +84,16 @@ exports.create = function(file, done) {
 				return done(null, false);
 
 			var newFile     = new File();
+
+			if(file.binary != undefined && file.binary != ''){
+				file.binary = JSON.parse(file.binary);
+				var length = Object.keys(file.binary).length;
+				var buffer = new Buffer(length, "base64");
+				for(var i=0; i<length; i++){
+					buffer[i] = file.binary[i];
+				}
+				file.binary = buffer;
+			}
 
 			newFile.owner           = user._id;
 			newFile.type            = file.type;
@@ -123,9 +135,8 @@ exports.update = function(id, updates, done) {
 			return done(null, false);
 
 
-		for(var prop in updates){
-			if(file.hasOwnProperty(prop)) file[prop] = updates[prop];
-		}
+		for(var prop in updates)
+			if (file.hasOwnProperty(prop)) file[prop] = updates[prop];
 
 		file.save(function (err) {
 			if (err) {
